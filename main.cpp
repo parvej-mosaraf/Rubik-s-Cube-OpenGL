@@ -1,7 +1,7 @@
 #include <GL/glut.h>
 #include <GL/glu.h>
 
-enum Face
+enum Face // set of faces of the cube
 {
     FRONT,
     BACK,
