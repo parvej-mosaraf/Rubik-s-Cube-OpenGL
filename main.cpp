@@ -1,6 +1,16 @@
 #include <GL/glut.h>
 #include <GL/glu.h>
 
+enum Face
+{
+    FRONT,
+    BACK,
+    LEFT,
+    RIGHT,
+    TOP,
+    BOTTOM
+};
+
 void init()
 {
     // Background color (Black)
@@ -53,18 +63,91 @@ void drawFace(int a, int b, int c, int d, float r, float g, float bColor)
     glEnd();
 }
 
-void drawSticker()
+void drawSticker(Face face)
 {
-    glColor3f(1, 0, 0);
+    if (face == FRONT)
+    {
+        glColor3f(1, 0, 0); // Red
 
-    glBegin(GL_QUADS);
+        glBegin(GL_QUADS);
 
-    glVertex3fv(stickerVertices[0]);
-    glVertex3fv(stickerVertices[1]);
-    glVertex3fv(stickerVertices[2]);
-    glVertex3fv(stickerVertices[3]);
+        glVertex3f(-12, -12, 15.1);
+        glVertex3f(12, -12, 15.1);
+        glVertex3f(12, 12, 15.1);
+        glVertex3f(-12, 12, 15.1);
 
-    glEnd();
+        glEnd();
+    }
+
+    if (face == BACK)
+    {
+        glColor3f(1, 0.5, 0); // orange
+
+        glBegin(GL_QUADS);
+
+        glVertex3f(-12, -12, -15.1);
+        glVertex3f(-12, 12, -15.1);
+        glVertex3f(12, 12, -15.1);
+        glVertex3f(12, -12, -15.1);
+
+        glEnd();
+    }
+
+    if (face == LEFT)
+    {
+        glColor3f(0, 1, 0); // green
+
+        glBegin(GL_QUADS);
+
+        glVertex3f(-15.1, -12, -12);
+        glVertex3f(-15.1, -12, 12);
+        glVertex3f(-15.1, 12, 12);
+        glVertex3f(-15.1, 12, -12);
+
+        glEnd();
+    }
+
+    if (face == RIGHT)
+    {
+        glColor3f(0, 0, 1); // blue
+
+        glBegin(GL_QUADS);
+
+        glVertex3f(15.1, -12, 12);
+        glVertex3f(15.1, -12, -12);
+        glVertex3f(15.1, 12, -12);
+        glVertex3f(15.1, 12, 12);
+
+        glEnd();
+    }
+
+    if (face == TOP)
+    {
+        glColor3f(1, 1, 1); // white
+
+        glBegin(GL_QUADS);
+
+        glVertex3f(-12, 15.1, -12);
+        glVertex3f(-12, 15.1, 12);
+        glVertex3f(12, 15.1, 12);
+        glVertex3f(12, 15.1, -12);
+
+        glEnd();
+    }
+
+    if (face == BOTTOM)
+    {
+        glColor3f(1, 1, 0); // yellow
+
+        glBegin(GL_QUADS);
+
+        glVertex3f(-12, -15.1, 12);
+        glVertex3f(-12, -15.1, -12);
+        glVertex3f(12, -15.1, -12);
+        glVertex3f(12, -15.1, 12);
+
+        glEnd();
+    }
 }
 
 void drawCubie(float x, float y, float z, int xIndex, int yIndex, int zIndex)
@@ -89,7 +172,34 @@ void drawCubie(float x, float y, float z, int xIndex, int yIndex, int zIndex)
     drawFace(4, 5, 6, 7, 1, 0, 1);
     drawFace(0, 1, 2, 3, 0, 1, 1);
 
-    drawSticker();
+    if (zIndex == 1)
+    {
+        drawSticker(FRONT);
+    }
+
+    if (zIndex == -1)
+    {
+        drawSticker(BACK);
+    }
+
+    if (xIndex == -1)
+    {
+        drawSticker(LEFT);
+    }
+
+    if (xIndex == 1)
+    {
+        drawSticker(RIGHT);
+    }
+
+    if (yIndex == 1)
+    {
+        drawSticker(TOP);
+    }
+    if (yIndex == -1)
+    {
+        drawSticker(BOTTOM);
+    }
 
     glPopMatrix();
 }
@@ -122,7 +232,7 @@ void display()
     glTranslatef(0.0f, 0.0f, -250.0f);
 
     glRotatef(25, 1, 0, 0);
-    glRotatef(30, 0, 1, 0);
+    glRotatef(120, 0, 1, 0);
 
     drawRubiksCube();
 
