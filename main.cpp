@@ -66,6 +66,20 @@ void display()
     glVertex3fv(vertices[6]);
     glVertex3fv(vertices[5]);
 
+    // Top
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glVertex3fv(vertices[4]);
+    glVertex3fv(vertices[5]);
+    glVertex3fv(vertices[6]);
+    glVertex3fv(vertices[7]);
+
+    // Bottom
+    glColor3f(1.0f, 1.0f, 0.0f);
+    glVertex3fv(vertices[0]);
+    glVertex3fv(vertices[1]);
+    glVertex3fv(vertices[2]);
+    glVertex3fv(vertices[3]);
+
     glEnd();
 
     glFlush();
