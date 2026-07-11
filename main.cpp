@@ -15,6 +15,18 @@ void init()
     glMatrixMode(GL_MODELVIEW);
 }
 
+float vertices[8][3] =
+    {
+        {-15.0f, -15.0f, -15.0f}, // v0
+        {15.0f, -15.0f, -15.0f},  // v1
+        {15.0f, 15.0f, -15.0f},   // v2
+        {-15.0f, 15.0f, -15.0f},  // v3
+        {-15.0f, -15.0f, 15.0f},  // v4
+        {15.0f, -15.0f, 15.0f},   // v5
+        {15.0f, 15.0f, 15.0f},    // v6
+        {-15.0f, 15.0f, 15.0f}    // v7
+};
+
 void display()
 {
     // Clear color buffer
@@ -26,10 +38,10 @@ void display()
 
     // Draw a Quad facing the camera (on the XY plane at Z=0)
     glBegin(GL_QUADS);
-    glVertex3f(-15.0f, 15.0f, 0.0f);  // Top Left
-    glVertex3f(15.0f, 15.0f, 0.0f);   // Top Right
-    glVertex3f(15.0f, -15.0f, 0.0f);  // Bottom Right
-    glVertex3f(-15.0f, -15.0f, 0.0f); // Bottom Left
+    glVertex3fv(vertices[4]);
+    glVertex3fv(vertices[5]);
+    glVertex3fv(vertices[6]);
+    glVertex3fv(vertices[7]);
     glEnd();
 
     glFlush();
