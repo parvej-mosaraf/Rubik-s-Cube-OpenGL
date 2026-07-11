@@ -60,6 +60,12 @@ void display()
     glVertex3fv(vertices[7]);
     glVertex3fv(vertices[4]);
 
+    // Right
+    glVertex3fv(vertices[1]);
+    glVertex3fv(vertices[2]);
+    glVertex3fv(vertices[6]);
+    glVertex3fv(vertices[5]);
+
     glEnd();
 
     glFlush();
