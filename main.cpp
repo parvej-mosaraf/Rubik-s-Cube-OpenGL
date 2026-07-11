@@ -1,7 +1,7 @@
 #include <GL/glut.h>
 #include <GL/glu.h>
 
-enum Face // set of faces of the cube
+enum Face
 {
     FRONT,
     BACK,
@@ -123,7 +123,7 @@ void drawSticker(Face face)
 
     if (face == TOP)
     {
-        glColor3f(1, 1, 1); // white
+        glColor3f(1, 1, 0); // white
 
         glBegin(GL_QUADS);
 
@@ -137,7 +137,7 @@ void drawSticker(Face face)
 
     if (face == BOTTOM)
     {
-        glColor3f(1, 1, 0); // yellow
+        glColor3f(1, 1, 1); // White
 
         glBegin(GL_QUADS);
 
