@@ -69,9 +69,9 @@ void drawRubiksCube()
             for (int z = -1; z <= 1; z++)
             {
                 drawCubie(
-                    x * 30,
-                    y * 30,
-                    z * 30);
+                    x * 28,
+                    y * 28,
+                    z * 28);
             }
         }
     }
