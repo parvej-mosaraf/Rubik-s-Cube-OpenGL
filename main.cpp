@@ -33,8 +33,9 @@ float vertices[8][3] =
         {-15.0f, 15.0f, 15.0f}    // v7
 };
 
-void drawFace(int a, int b, int c, int d)
+void drawFace(int a, int b, int c, int d, float r, float g, float bColor)
 {
+    glColor3f(r, g, bColor);
     glBegin(GL_QUADS);
 
     glVertex3fv(vertices[a]);
@@ -62,12 +63,12 @@ void display()
     // Draw a Quad facing the camera (on the XY plane at Z=0)
     glBegin(GL_QUADS);
 
-    drawFace(0, 1, 5, 4); // Front
-    drawFace(3, 2, 6, 7); // Back
-    drawFace(0, 3, 7, 4); // Left
-    drawFace(1, 2, 6, 5); // Right
-    drawFace(4, 5, 6, 7); // Top
-    drawFace(0, 1, 2, 3); // Bottom
+    drawFace(0, 1, 5, 4, 1, 0, 0); // Front - Red
+    drawFace(3, 2, 6, 7, 0, 1, 0); // Back - Green
+    drawFace(0, 3, 7, 4, 0, 0, 1); // Left - Blue
+    drawFace(1, 2, 6, 5, 1, 1, 0); // Right - Yellow
+    drawFace(4, 5, 6, 7, 1, 0, 1); // Top - Purple
+    drawFace(0, 1, 2, 3, 0, 1, 1); // Bottom - Cyan
 
     glEnd();
 
