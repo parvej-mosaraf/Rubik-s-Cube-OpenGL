@@ -67,7 +67,7 @@ void drawSticker()
     glEnd();
 }
 
-void drawCubie(float x, float y, float z)
+void drawCubie(float x, float y, float z, int xIndex, int yIndex, int zIndex)
 {
     glPushMatrix();
 
@@ -105,7 +105,10 @@ void drawRubiksCube()
                 drawCubie(
                     x * 30,
                     y * 30,
-                    z * 30);
+                    z * 30,
+                    x,
+                    y,
+                    z);
             }
         }
     }
