@@ -14,7 +14,7 @@ void init()
         45.0, // Field of view
         1.0,  // Aspect ratio
         1.0,  // Near clipping plane
-        200.0 // Far clipping plane
+        500.0 // Far clipping plane
     );
 
     glMatrixMode(GL_MODELVIEW);
@@ -60,13 +60,30 @@ void drawCubie(float x, float y, float z)
     glPopMatrix();
 }
 
+void drawRubiksCube()
+{
+    for (int x = -1; x <= 1; x++)
+    {
+        for (int y = -1; y <= 1; y++)
+        {
+            for (int z = -1; z <= 1; z++)
+            {
+                drawCubie(
+                    x * 30,
+                    y * 30,
+                    z * 30);
+            }
+        }
+    }
+}
+
 void display()
 {
     // Clear color buffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
-    glTranslatef(0.0f, 0.0f, -80.0f);
+    glTranslatef(0.0f, 0.0f, -250.0f);
 
     glRotatef(25, 1, 0, 0); // Rotate around X-axis
     glRotatef(30, 0, 1, 0); // Rotate around Y-axis
@@ -77,7 +94,8 @@ void display()
     // Draw a Quad facing the camera (on the XY plane at Z=0)
     glBegin(GL_QUADS);
 
-    drawCubie(0, 0, 0); // Draw the cubie at the origin
+    // drawCubie(0, 0, 0); // Draw the cubie at the origin
+    drawRubiksCube(); // Draw the Rubik's Cube
 
     glEnd();
 
@@ -88,7 +106,7 @@ int main(int argc, char **argv)
 {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
-    glutInitWindowSize(500, 500);
+    glutInitWindowSize(1000, 1000);
     glutCreateWindow("OpenGL Quad Drawing"); // Updated title
 
     init();
