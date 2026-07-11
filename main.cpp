@@ -38,10 +38,19 @@ void display()
 
     // Draw a Quad facing the camera (on the XY plane at Z=0)
     glBegin(GL_QUADS);
+
+    // Front
     glVertex3fv(vertices[4]);
     glVertex3fv(vertices[5]);
     glVertex3fv(vertices[6]);
     glVertex3fv(vertices[7]);
+
+    // Back
+    glVertex3fv(vertices[3]);
+    glVertex3fv(vertices[2]);
+    glVertex3fv(vertices[1]);
+    glVertex3fv(vertices[0]);
+
     glEnd();
 
     glFlush();
