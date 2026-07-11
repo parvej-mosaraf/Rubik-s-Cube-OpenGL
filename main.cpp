@@ -33,6 +33,13 @@ float vertices[8][3] =
         {-15.0f, 15.0f, 15.0f}    // v7
 };
 
+float stickerVertices[4][3] =
+    {
+        {-12.0f, -12.0f, 15.1f},
+        {12.0f, -12.0f, 15.1f},
+        {12.0f, 12.0f, 15.1f},
+        {-12.0f, 12.0f, 15.1f}};
+
 void drawFace(int a, int b, int c, int d, float r, float g, float bColor)
 {
     glColor3f(r, g, bColor);
@@ -46,17 +53,44 @@ void drawFace(int a, int b, int c, int d, float r, float g, float bColor)
     glEnd();
 }
 
+void drawSticker()
+{
+    glColor3f(1, 0, 0);
+
+    glBegin(GL_QUADS);
+
+    glVertex3fv(stickerVertices[0]);
+    glVertex3fv(stickerVertices[1]);
+    glVertex3fv(stickerVertices[2]);
+    glVertex3fv(stickerVertices[3]);
+
+    glEnd();
+}
+
 void drawCubie(float x, float y, float z)
 {
     glPushMatrix();
 
     glTranslatef(x, y, z);
-    drawFace(0, 1, 5, 4, 1, 0, 0); // Front
-    drawFace(3, 2, 6, 7, 0, 1, 0); // Back
-    drawFace(0, 3, 7, 4, 0, 0, 1); // Left
-    drawFace(1, 2, 6, 5, 1, 1, 0); // Right
-    drawFace(4, 5, 6, 7, 1, 0, 1); // Top
-    drawFace(0, 1, 2, 3, 0, 1, 1); // Bottom
+
+    // Plastic body
+    drawFace(0, 1, 5, 4, 0.2, 0.2, 0.2);
+    drawFace(3, 2, 6, 7, 0.2, 0.2, 0.2);
+    drawFace(0, 3, 7, 4, 0.2, 0.2, 0.2);
+    drawFace(1, 2, 6, 5, 0.2, 0.2, 0.2);
+    drawFace(4, 5, 6, 7, 0.2, 0.2, 0.2);
+    drawFace(0, 1, 2, 3, 0.2, 0.2, 0.2);
+
+    // Stickers (temporary)
+    drawFace(0, 1, 5, 4, 1, 0, 0);
+    drawFace(3, 2, 6, 7, 0, 1, 0);
+    drawFace(0, 3, 7, 4, 0, 0, 1);
+    drawFace(1, 2, 6, 5, 1, 1, 0);
+    drawFace(4, 5, 6, 7, 1, 0, 1);
+    drawFace(0, 1, 2, 3, 0, 1, 1);
+
+    drawSticker();
+
     glPopMatrix();
 }
 
@@ -69,9 +103,9 @@ void drawRubiksCube()
             for (int z = -1; z <= 1; z++)
             {
                 drawCubie(
-                    x * 28,
-                    y * 28,
-                    z * 28);
+                    x * 30,
+                    y * 30,
+                    z * 30);
             }
         }
     }
@@ -79,33 +113,23 @@ void drawRubiksCube()
 
 void display()
 {
-    // Clear color buffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
     glTranslatef(0.0f, 0.0f, -250.0f);
 
-    glRotatef(25, 1, 0, 0); // Rotate around X-axis
-    glRotatef(30, 0, 1, 0); // Rotate around Y-axis
+    glRotatef(25, 1, 0, 0);
+    glRotatef(30, 0, 1, 0);
 
-    // Set color to Blue (Red=0.0, Green=0.0, Blue=1.0)
-    glColor3f(0.0f, 0.0f, 1.0f);
+    drawRubiksCube();
 
-    // Draw a Quad facing the camera (on the XY plane at Z=0)
-    glBegin(GL_QUADS);
-
-    // drawCubie(0, 0, 0); // Draw the cubie at the origin
-    drawRubiksCube(); // Draw the Rubik's Cube
-
-    glEnd();
-
-    glFlush();
+    glutSwapBuffers();
 }
 
 int main(int argc, char **argv)
 {
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize(1000, 1000);
     glutCreateWindow("OpenGL Quad Drawing"); // Updated title
 
