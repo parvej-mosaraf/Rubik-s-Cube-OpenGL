@@ -33,6 +33,9 @@ void display()
     glClear(GL_COLOR_BUFFER_BIT);
     glLoadIdentity();
 
+    glRotatef(25, 1, 0, 0); // Rotate around X-axis
+    glRotatef(30, 0, 1, 0); // Rotate around Y-axis
+
     // Set color to Blue (Red=0.0, Green=0.0, Blue=1.0)
     glColor3f(0.0f, 0.0f, 1.0f);
 
