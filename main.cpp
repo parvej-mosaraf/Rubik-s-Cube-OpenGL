@@ -9,10 +9,16 @@ void init()
     // Set 3D projection
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    // Setting up a standard orthographic volume
-    glOrtho(-50.0, 50.0, -50.0, 50.0, -50.0, 50.0);
+
+    gluPerspective(
+        45.0, // Field of view
+        1.0,  // Aspect ratio
+        1.0,  // Near clipping plane
+        200.0 // Far clipping plane
+    );
 
     glMatrixMode(GL_MODELVIEW);
+    glEnable(GL_DEPTH_TEST);
 }
 
 float vertices[8][3] =
@@ -27,11 +33,25 @@ float vertices[8][3] =
         {-15.0f, 15.0f, 15.0f}    // v7
 };
 
+void drawFace(int a, int b, int c, int d)
+{
+    glBegin(GL_QUADS);
+
+    glVertex3fv(vertices[a]);
+    glVertex3fv(vertices[b]);
+    glVertex3fv(vertices[c]);
+    glVertex3fv(vertices[d]);
+
+    glEnd();
+}
+
 void display()
 {
     // Clear color buffer
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
+
+    glTranslatef(0.0f, 0.0f, -80.0f);
 
     glRotatef(25, 1, 0, 0); // Rotate around X-axis
     glRotatef(30, 0, 1, 0); // Rotate around Y-axis
@@ -42,43 +62,12 @@ void display()
     // Draw a Quad facing the camera (on the XY plane at Z=0)
     glBegin(GL_QUADS);
 
-    // Front
-    glVertex3fv(vertices[4]);
-    glVertex3fv(vertices[5]);
-    glVertex3fv(vertices[6]);
-    glVertex3fv(vertices[7]);
-
-    // Back
-    glVertex3fv(vertices[3]);
-    glVertex3fv(vertices[2]);
-    glVertex3fv(vertices[1]);
-    glVertex3fv(vertices[0]);
-
-    // Left
-    glVertex3fv(vertices[0]);
-    glVertex3fv(vertices[3]);
-    glVertex3fv(vertices[7]);
-    glVertex3fv(vertices[4]);
-
-    // Right
-    glVertex3fv(vertices[1]);
-    glVertex3fv(vertices[2]);
-    glVertex3fv(vertices[6]);
-    glVertex3fv(vertices[5]);
-
-    // Top
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glVertex3fv(vertices[4]);
-    glVertex3fv(vertices[5]);
-    glVertex3fv(vertices[6]);
-    glVertex3fv(vertices[7]);
-
-    // Bottom
-    glColor3f(1.0f, 1.0f, 0.0f);
-    glVertex3fv(vertices[0]);
-    glVertex3fv(vertices[1]);
-    glVertex3fv(vertices[2]);
-    glVertex3fv(vertices[3]);
+    drawFace(0, 1, 5, 4); // Front
+    drawFace(3, 2, 6, 7); // Back
+    drawFace(0, 3, 7, 4); // Left
+    drawFace(1, 2, 6, 5); // Right
+    drawFace(4, 5, 6, 7); // Top
+    drawFace(0, 1, 2, 3); // Bottom
 
     glEnd();
 
@@ -88,7 +77,7 @@ void display()
 int main(int argc, char **argv)
 {
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize(500, 500);
     glutCreateWindow("OpenGL Quad Drawing"); // Updated title
 
