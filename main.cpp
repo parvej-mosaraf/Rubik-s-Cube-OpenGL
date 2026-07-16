@@ -313,6 +313,34 @@ void keyboard(unsigned char key, int x, int y)
     }
 }
 
+void updateRotation(int value)
+{
+    printf("Active = %d  Angle = %.1f\n",
+           currentRotation.active,
+           currentRotation.angle);
+    if (currentRotation.active)
+    {
+        if (currentRotation.clockwise)
+            currentRotation.angle += 5.0f;
+        else
+            currentRotation.angle -= 5.0f;
+
+        if (currentRotation.angle >= 90.0f ||
+            currentRotation.angle <= -90.0f)
+        {
+            currentRotation.angle = 90.0f * (currentRotation.clockwise ? 1 : -1);
+
+            // We'll update cubie positions here later.
+
+            currentRotation.active = false;
+        }
+    }
+
+    glutPostRedisplay();
+
+    glutTimerFunc(16, updateRotation, 0);
+}
+
 int main(int argc, char **argv)
 {
     glutInit(&argc, argv);
@@ -324,6 +352,7 @@ int main(int argc, char **argv)
 
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard);
+    glutTimerFunc(16, updateRotation, 0);
 
     glutMainLoop();
 
