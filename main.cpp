@@ -168,6 +168,13 @@ void drawCubie(float x, float y, float z, int xIndex, int yIndex, int zIndex)
 {
     glPushMatrix();
 
+    if (currentRotation.active &&
+        currentRotation.face == FRONT &&
+        zIndex == 1)
+    {
+        glRotatef(currentRotation.angle, 0, 0, 1);
+    }
+
     glTranslatef(x, y, z);
 
     // Plastic body
