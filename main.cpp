@@ -23,7 +23,7 @@ struct Rotation
     float angle;
 };
 
-Rotation currentRotation;
+Rotation currentRotation = {false, FRONT, true, 0.0f};
 
 void init()
 {
@@ -253,38 +253,62 @@ void display()
     glutSwapBuffers();
 }
 
+void startRotation(Face face, bool clockwise)
+{
+    if (currentRotation.active)
+        return;
+
+    currentRotation.active = true;
+    currentRotation.face = face;
+    currentRotation.clockwise = clockwise;
+    currentRotation.angle = 0.0f;
+    printf("Face = %d  Clockwise = %d\n", face, clockwise);
+}
+
 void keyboard(unsigned char key, int x, int y)
 {
     switch (key)
     {
     case 'f':
+        startRotation(FRONT, true);
+        break;
     case 'F':
-        printf("Front\n");
+        startRotation(FRONT, false);
         break;
 
     case 'b':
+        startRotation(BACK, true);
+        break;
     case 'B':
-        printf("Back\n");
+        startRotation(BACK, false);
         break;
 
     case 'u':
+        startRotation(UP, true);
+        break;
     case 'U':
-        printf("Up\n");
+        startRotation(UP, false);
         break;
 
     case 'd':
+        startRotation(DOWN, true);
+        break;
     case 'D':
-        printf("Down\n");
+        startRotation(DOWN, false);
         break;
 
     case 'l':
+        startRotation(LEFT, true);
+        break;
     case 'L':
-        printf("Left\n");
+        startRotation(LEFT, false);
         break;
 
     case 'r':
+        startRotation(RIGHT, true);
+        break;
     case 'R':
-        printf("Right\n");
+        startRotation(RIGHT, false);
         break;
     }
 }
