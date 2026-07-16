@@ -12,6 +12,19 @@ enum Face
     DOWN
 };
 
+struct Cubie
+{
+    float x;
+    float y;
+    float z;
+
+    int xIndex;
+    int yIndex;
+    int zIndex;
+};
+
+Cubie cube[27];
+
 struct Rotation
 {
     bool active;
@@ -227,21 +240,15 @@ void drawCubie(float x, float y, float z, int xIndex, int yIndex, int zIndex)
 
 void drawRubiksCube()
 {
-    for (int x = -1; x <= 1; x++)
+    for (int i = 0; i < 27; i++)
     {
-        for (int y = -1; y <= 1; y++)
-        {
-            for (int z = -1; z <= 1; z++)
-            {
-                drawCubie(
-                    x * 30,
-                    y * 30,
-                    z * 30,
-                    x,
-                    y,
-                    z);
-            }
-        }
+        drawCubie(
+            cube[i].x,
+            cube[i].y,
+            cube[i].z,
+            cube[i].xIndex,
+            cube[i].yIndex,
+            cube[i].zIndex);
     }
 }
 
@@ -348,6 +355,30 @@ void updateRotation(int value)
     glutTimerFunc(16, updateRotation, 0);
 }
 
+void initCube()
+{
+    int index = 0;
+
+    for (int x = -1; x <= 1; x++)
+    {
+        for (int y = -1; y <= 1; y++)
+        {
+            for (int z = -1; z <= 1; z++)
+            {
+                cube[index].xIndex = x;
+                cube[index].yIndex = y;
+                cube[index].zIndex = z;
+
+                cube[index].x = x * 30;
+                cube[index].y = y * 30;
+                cube[index].z = z * 30;
+
+                index++;
+            }
+        }
+    }
+}
+
 int main(int argc, char **argv)
 {
     glutInit(&argc, argv);
@@ -356,6 +387,7 @@ int main(int argc, char **argv)
     glutCreateWindow("OpenGL Quad Drawing"); // Updated title
 
     init();
+    initCube();
 
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard);
