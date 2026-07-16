@@ -2,15 +2,28 @@
 #include <GL/glu.h>
 #include <cstdio>
 
-enum Face // set of face
+enum Face
 {
     FRONT,
     BACK,
     LEFT,
     RIGHT,
-    TOP,
-    BOTTOM
+    UP,
+    DOWN
 };
+
+struct Rotation
+{
+    bool active;
+
+    Face face;
+
+    bool clockwise;
+
+    float angle;
+};
+
+Rotation currentRotation;
 
 void init()
 {
@@ -122,7 +135,7 @@ void drawSticker(Face face)
         glEnd();
     }
 
-    if (face == TOP)
+    if (face == UP)
     {
         glColor3f(1, 1, 1); // white
 
@@ -136,7 +149,7 @@ void drawSticker(Face face)
         glEnd();
     }
 
-    if (face == BOTTOM)
+    if (face == DOWN)
     {
         glColor3f(1, 1, 0); // yellow
 
@@ -195,11 +208,11 @@ void drawCubie(float x, float y, float z, int xIndex, int yIndex, int zIndex)
 
     if (yIndex == 1)
     {
-        drawSticker(TOP);
+        drawSticker(UP);
     }
     if (yIndex == -1)
     {
-        drawSticker(BOTTOM);
+        drawSticker(DOWN);
     }
 
     glPopMatrix();
