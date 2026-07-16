@@ -1,5 +1,6 @@
 #include <GL/glut.h>
 #include <GL/glu.h>
+#include <cstdio>
 
 enum Face // set of face
 {
@@ -239,6 +240,42 @@ void display()
     glutSwapBuffers();
 }
 
+void keyboard(unsigned char key, int x, int y)
+{
+    switch (key)
+    {
+    case 'f':
+    case 'F':
+        printf("Front\n");
+        break;
+
+    case 'b':
+    case 'B':
+        printf("Back\n");
+        break;
+
+    case 'u':
+    case 'U':
+        printf("Up\n");
+        break;
+
+    case 'd':
+    case 'D':
+        printf("Down\n");
+        break;
+
+    case 'l':
+    case 'L':
+        printf("Left\n");
+        break;
+
+    case 'r':
+    case 'R':
+        printf("Right\n");
+        break;
+    }
+}
+
 int main(int argc, char **argv)
 {
     glutInit(&argc, argv);
@@ -249,6 +286,7 @@ int main(int argc, char **argv)
     init();
 
     glutDisplayFunc(display);
+    glutKeyboardFunc(keyboard);
 
     glutMainLoop();
 
