@@ -165,12 +165,12 @@ void drawCubie(float x, float y, float z, int xIndex, int yIndex, int zIndex)
     drawFace(0, 1, 2, 3, 0.2, 0.2, 0.2);
 
     // Stickers (temporary)
-    drawFace(0, 1, 5, 4, 1, 0, 0);
-    drawFace(3, 2, 6, 7, 0, 1, 0);
-    drawFace(0, 3, 7, 4, 0, 0, 1);
-    drawFace(1, 2, 6, 5, 1, 1, 0);
-    drawFace(4, 5, 6, 7, 1, 0, 1);
-    drawFace(0, 1, 2, 3, 0, 1, 1);
+    // drawFace(0, 1, 5, 4, 1, 0, 0);
+    // drawFace(3, 2, 6, 7, 0, 1, 0);
+    // drawFace(0, 3, 7, 4, 0, 0, 1);
+    // drawFace(1, 2, 6, 5, 1, 1, 0);
+    // drawFace(4, 5, 6, 7, 1, 0, 1);
+    // drawFace(0, 1, 2, 3, 0, 1, 1);
 
     if (zIndex == 1)
     {
