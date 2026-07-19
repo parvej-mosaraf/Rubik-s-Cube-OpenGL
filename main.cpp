@@ -12,6 +12,23 @@ enum Face
     DOWN
 };
 
+enum Direction
+{
+    CLOCKWISE,
+    ANTICLOCKWISE
+};
+
+enum Color
+{
+    RED,
+    ORANGE,
+    BLUE,
+    GREEN,
+    YELLOW,
+    WHITE,
+    NONE
+};
+
 struct Cubie
 {
     float x;
@@ -21,6 +38,8 @@ struct Cubie
     int xIndex;
     int yIndex;
     int zIndex;
+
+    int colors[6];
 };
 
 Cubie cube[27];
@@ -70,16 +89,37 @@ float vertices[8][3] =
         {-15.0f, 15.0f, 15.0f}    // v7
 };
 
-float stickerVertices[4][3] =
-    {
-        {-12.0f, -12.0f, 15.1f},
-        {12.0f, -12.0f, 15.1f},
-        {12.0f, 12.0f, 15.1f},
-        {-12.0f, 12.0f, 15.1f}};
-
-void drawFace(int a, int b, int c, int d, float r, float g, float bColor)
+void setColor(Color color)
 {
-    glColor3f(r, g, bColor);
+    switch (color)
+    {
+    case RED:
+        glColor3f(1, 0, 0);
+        break;
+    case ORANGE:
+        glColor3f(1, 0.5, 0);
+        break;
+    case BLUE:
+        glColor3f(0, 0, 1);
+        break;
+    case GREEN:
+        glColor3f(0, 1, 0);
+        break;
+    case YELLOW:
+        glColor3f(1, 1, 0);
+        break;
+    case WHITE:
+        glColor3f(1, 1, 1);
+        break;
+    default:
+        glColor3f(0.2f, 0.2f, 0.2f);
+    }
+}
+
+void drawFace(int a, int b, int c, int d, float r, float g, float bb)
+{
+    glColor3f(r, g, bb);
+
     glBegin(GL_QUADS);
 
     glVertex3fv(vertices[a]);
@@ -90,12 +130,12 @@ void drawFace(int a, int b, int c, int d, float r, float g, float bColor)
     glEnd();
 }
 
-void drawSticker(Face face)
+void drawSticker(Face face, Color color)
 {
+    setColor(color);
+
     if (face == FRONT)
     {
-        glColor3f(1, 0, 0); // Red
-
         glBegin(GL_QUADS);
 
         glVertex3f(-12, -12, 15.1);
@@ -108,8 +148,6 @@ void drawSticker(Face face)
 
     if (face == BACK)
     {
-        glColor3f(1, 0.5, 0); // orange
-
         glBegin(GL_QUADS);
 
         glVertex3f(-12, -12, -15.1);
@@ -122,8 +160,6 @@ void drawSticker(Face face)
 
     if (face == LEFT)
     {
-        glColor3f(0, 1, 0); // green
-
         glBegin(GL_QUADS);
 
         glVertex3f(-15.1, -12, -12);
@@ -136,8 +172,6 @@ void drawSticker(Face face)
 
     if (face == RIGHT)
     {
-        glColor3f(0, 0, 1); // blue
-
         glBegin(GL_QUADS);
 
         glVertex3f(15.1, -12, 12);
@@ -150,8 +184,6 @@ void drawSticker(Face face)
 
     if (face == UP)
     {
-        glColor3f(1, 1, 1); // white
-
         glBegin(GL_QUADS);
 
         glVertex3f(-12, 15.1, -12);
@@ -164,8 +196,6 @@ void drawSticker(Face face)
 
     if (face == DOWN)
     {
-        glColor3f(1, 1, 0); // yellow
-
         glBegin(GL_QUADS);
 
         glVertex3f(-12, -15.1, 12);
@@ -177,63 +207,78 @@ void drawSticker(Face face)
     }
 }
 
-void drawCubie(float x, float y, float z, int xIndex, int yIndex, int zIndex)
+// Returns true if this cubie belongs to the layer currently being animated
+// for the given face.
+bool isInRotatingLayer(const Cubie &cubie, Face face)
+{
+    switch (face)
+    {
+    case FRONT:
+        return cubie.zIndex == 1;
+    case BACK:
+        return cubie.zIndex == -1;
+    case LEFT:
+        return cubie.xIndex == -1;
+    case RIGHT:
+        return cubie.xIndex == 1;
+    case UP:
+        return cubie.yIndex == 1;
+    case DOWN:
+        return cubie.yIndex == -1;
+    }
+    return false;
+}
+
+void drawCubie(const Cubie &cubie)
 {
     glPushMatrix();
 
-    if (currentRotation.active &&
-        currentRotation.face == FRONT &&
-        zIndex == 1)
+    if (currentRotation.active && isInRotatingLayer(cubie, currentRotation.face))
     {
-        glRotatef(currentRotation.angle, 0, 0, 1);
+        switch (currentRotation.face)
+        {
+        case FRONT:
+        case BACK:
+            glRotatef(currentRotation.angle, 0, 0, 1);
+            break;
+        case LEFT:
+        case RIGHT:
+            glRotatef(currentRotation.angle, 1, 0, 0);
+            break;
+        case UP:
+        case DOWN:
+            glRotatef(currentRotation.angle, 0, 1, 0);
+            break;
+        }
     }
 
-    glTranslatef(x, y, z);
+    glTranslatef(cubie.x, cubie.y, cubie.z);
 
     // Plastic body
-    drawFace(0, 1, 5, 4, 0.2, 0.2, 0.2);
-    drawFace(3, 2, 6, 7, 0.2, 0.2, 0.2);
-    drawFace(0, 3, 7, 4, 0.2, 0.2, 0.2);
-    drawFace(1, 2, 6, 5, 0.2, 0.2, 0.2);
-    drawFace(4, 5, 6, 7, 0.2, 0.2, 0.2);
-    drawFace(0, 1, 2, 3, 0.2, 0.2, 0.2);
+    drawFace(0, 1, 5, 4, 0.2f, 0.2f, 0.2f);
+    drawFace(3, 2, 6, 7, 0.2f, 0.2f, 0.2f);
+    drawFace(0, 3, 7, 4, 0.2f, 0.2f, 0.2f);
+    drawFace(1, 2, 6, 5, 0.2f, 0.2f, 0.2f);
+    drawFace(4, 5, 6, 7, 0.2f, 0.2f, 0.2f);
+    drawFace(0, 1, 2, 3, 0.2f, 0.2f, 0.2f);
 
-    // Stickers (temporary)
-    // drawFace(0, 1, 5, 4, 1, 0, 0);
-    // drawFace(3, 2, 6, 7, 0, 1, 0);
-    // drawFace(0, 3, 7, 4, 0, 0, 1);
-    // drawFace(1, 2, 6, 5, 1, 1, 0);
-    // drawFace(4, 5, 6, 7, 1, 0, 1);
-    // drawFace(0, 1, 2, 3, 0, 1, 1);
+    if (cubie.colors[FRONT] != NONE)
+        drawSticker(FRONT, (Color)cubie.colors[FRONT]);
 
-    if (zIndex == 1)
-    {
-        drawSticker(FRONT);
-    }
+    if (cubie.colors[BACK] != NONE)
+        drawSticker(BACK, (Color)cubie.colors[BACK]);
 
-    if (zIndex == -1)
-    {
-        drawSticker(BACK);
-    }
+    if (cubie.colors[LEFT] != NONE)
+        drawSticker(LEFT, (Color)cubie.colors[LEFT]);
 
-    if (xIndex == -1)
-    {
-        drawSticker(LEFT);
-    }
+    if (cubie.colors[RIGHT] != NONE)
+        drawSticker(RIGHT, (Color)cubie.colors[RIGHT]);
 
-    if (xIndex == 1)
-    {
-        drawSticker(RIGHT);
-    }
+    if (cubie.colors[UP] != NONE)
+        drawSticker(UP, (Color)cubie.colors[UP]);
 
-    if (yIndex == 1)
-    {
-        drawSticker(UP);
-    }
-    if (yIndex == -1)
-    {
-        drawSticker(DOWN);
-    }
+    if (cubie.colors[DOWN] != NONE)
+        drawSticker(DOWN, (Color)cubie.colors[DOWN]);
 
     glPopMatrix();
 }
@@ -242,13 +287,231 @@ void drawRubiksCube()
 {
     for (int i = 0; i < 27; i++)
     {
-        drawCubie(
-            cube[i].x,
-            cube[i].y,
-            cube[i].z,
-            cube[i].xIndex,
-            cube[i].yIndex,
-            cube[i].zIndex);
+        drawCubie(cube[i]);
+    }
+}
+
+// Rotates the four side stickers of a cubie that belong to the layer
+// being turned. Each face has its own 4-cycle of neighbouring faces.
+void rotateStickerColors(Cubie &cubie, Face face, Direction direction)
+{
+    int temp;
+
+    switch (face)
+    {
+    case FRONT:
+        if (direction == CLOCKWISE)
+        {
+            temp = cubie.colors[UP];
+            cubie.colors[UP] = cubie.colors[LEFT];
+            cubie.colors[LEFT] = cubie.colors[DOWN];
+            cubie.colors[DOWN] = cubie.colors[RIGHT];
+            cubie.colors[RIGHT] = temp;
+        }
+        else
+        {
+            temp = cubie.colors[UP];
+            cubie.colors[UP] = cubie.colors[RIGHT];
+            cubie.colors[RIGHT] = cubie.colors[DOWN];
+            cubie.colors[DOWN] = cubie.colors[LEFT];
+            cubie.colors[LEFT] = temp;
+        }
+        break;
+
+    case BACK:
+        if (direction == CLOCKWISE)
+        {
+            temp = cubie.colors[UP];
+            cubie.colors[UP] = cubie.colors[RIGHT];
+            cubie.colors[RIGHT] = cubie.colors[DOWN];
+            cubie.colors[DOWN] = cubie.colors[LEFT];
+            cubie.colors[LEFT] = temp;
+        }
+        else
+        {
+            temp = cubie.colors[UP];
+            cubie.colors[UP] = cubie.colors[LEFT];
+            cubie.colors[LEFT] = cubie.colors[DOWN];
+            cubie.colors[DOWN] = cubie.colors[RIGHT];
+            cubie.colors[RIGHT] = temp;
+        }
+        break;
+
+    case LEFT:
+        if (direction == CLOCKWISE)
+        {
+            temp = cubie.colors[UP];
+            cubie.colors[UP] = cubie.colors[BACK];
+            cubie.colors[BACK] = cubie.colors[DOWN];
+            cubie.colors[DOWN] = cubie.colors[FRONT];
+            cubie.colors[FRONT] = temp;
+        }
+        else
+        {
+            temp = cubie.colors[UP];
+            cubie.colors[UP] = cubie.colors[FRONT];
+            cubie.colors[FRONT] = cubie.colors[DOWN];
+            cubie.colors[DOWN] = cubie.colors[BACK];
+            cubie.colors[BACK] = temp;
+        }
+        break;
+
+    case RIGHT:
+        if (direction == CLOCKWISE)
+        {
+            temp = cubie.colors[UP];
+            cubie.colors[UP] = cubie.colors[FRONT];
+            cubie.colors[FRONT] = cubie.colors[DOWN];
+            cubie.colors[DOWN] = cubie.colors[BACK];
+            cubie.colors[BACK] = temp;
+        }
+        else
+        {
+            temp = cubie.colors[UP];
+            cubie.colors[UP] = cubie.colors[BACK];
+            cubie.colors[BACK] = cubie.colors[DOWN];
+            cubie.colors[DOWN] = cubie.colors[FRONT];
+            cubie.colors[FRONT] = temp;
+        }
+        break;
+
+    case UP:
+        if (direction == CLOCKWISE)
+        {
+            temp = cubie.colors[FRONT];
+            cubie.colors[FRONT] = cubie.colors[RIGHT];
+            cubie.colors[RIGHT] = cubie.colors[BACK];
+            cubie.colors[BACK] = cubie.colors[LEFT];
+            cubie.colors[LEFT] = temp;
+        }
+        else
+        {
+            temp = cubie.colors[FRONT];
+            cubie.colors[FRONT] = cubie.colors[LEFT];
+            cubie.colors[LEFT] = cubie.colors[BACK];
+            cubie.colors[BACK] = cubie.colors[RIGHT];
+            cubie.colors[RIGHT] = temp;
+        }
+        break;
+
+    case DOWN:
+        if (direction == CLOCKWISE)
+        {
+            temp = cubie.colors[FRONT];
+            cubie.colors[FRONT] = cubie.colors[LEFT];
+            cubie.colors[LEFT] = cubie.colors[BACK];
+            cubie.colors[BACK] = cubie.colors[RIGHT];
+            cubie.colors[RIGHT] = temp;
+        }
+        else
+        {
+            temp = cubie.colors[FRONT];
+            cubie.colors[FRONT] = cubie.colors[RIGHT];
+            cubie.colors[RIGHT] = cubie.colors[BACK];
+            cubie.colors[BACK] = cubie.colors[LEFT];
+            cubie.colors[LEFT] = temp;
+        }
+        break;
+    }
+}
+
+void rotateLayer(Face face, Direction direction)
+{
+    for (int i = 0; i < 27; i++)
+    {
+        if (!isInRotatingLayer(cube[i], face))
+            continue;
+
+        int oldX = cube[i].xIndex;
+        int oldY = cube[i].yIndex;
+        int oldZ = cube[i].zIndex;
+
+        switch (face)
+        {
+        case FRONT:
+            if (direction == CLOCKWISE)
+            {
+                cube[i].xIndex = -oldY;
+                cube[i].yIndex = oldX;
+            }
+            else
+            {
+                cube[i].xIndex = oldY;
+                cube[i].yIndex = -oldX;
+            }
+            break;
+
+        case BACK:
+            if (direction == CLOCKWISE)
+            {
+                cube[i].xIndex = oldY;
+                cube[i].yIndex = -oldX;
+            }
+            else
+            {
+                cube[i].xIndex = -oldY;
+                cube[i].yIndex = oldX;
+            }
+            break;
+
+        case LEFT:
+            if (direction == CLOCKWISE)
+            {
+                cube[i].yIndex = oldZ;
+                cube[i].zIndex = -oldY;
+            }
+            else
+            {
+                cube[i].yIndex = -oldZ;
+                cube[i].zIndex = oldY;
+            }
+            break;
+
+        case RIGHT:
+            if (direction == CLOCKWISE)
+            {
+                cube[i].yIndex = -oldZ;
+                cube[i].zIndex = oldY;
+            }
+            else
+            {
+                cube[i].yIndex = oldZ;
+                cube[i].zIndex = -oldY;
+            }
+            break;
+
+        case UP:
+            if (direction == CLOCKWISE)
+            {
+                cube[i].zIndex = -oldX;
+                cube[i].xIndex = oldZ;
+            }
+            else
+            {
+                cube[i].zIndex = oldX;
+                cube[i].xIndex = -oldZ;
+            }
+            break;
+
+        case DOWN:
+            if (direction == CLOCKWISE)
+            {
+                cube[i].zIndex = oldX;
+                cube[i].xIndex = -oldZ;
+            }
+            else
+            {
+                cube[i].zIndex = -oldX;
+                cube[i].xIndex = oldZ;
+            }
+            break;
+        }
+
+        cube[i].x = cube[i].xIndex * 30;
+        cube[i].y = cube[i].yIndex * 30;
+        cube[i].z = cube[i].zIndex * 30;
+
+        rotateStickerColors(cube[i], face, direction);
     }
 }
 
@@ -329,9 +592,6 @@ void keyboard(unsigned char key, int x, int y)
 
 void updateRotation(int value)
 {
-    printf("Active = %d  Angle = %.1f\n",
-           currentRotation.active,
-           currentRotation.angle);
     if (currentRotation.active)
     {
         if (currentRotation.clockwise)
@@ -344,7 +604,9 @@ void updateRotation(int value)
         {
             currentRotation.angle = 90.0f * (currentRotation.clockwise ? 1 : -1);
 
-            // We'll update cubie positions here later.
+            rotateLayer(
+                currentRotation.face,
+                currentRotation.clockwise ? CLOCKWISE : ANTICLOCKWISE);
 
             currentRotation.active = false;
         }
@@ -373,6 +635,32 @@ void initCube()
                 cube[index].y = y * 30;
                 cube[index].z = z * 30;
 
+                // First remove all stickers
+                for (int c = 0; c < 6; c++)
+                {
+                    cube[index].colors[c] = NONE;
+                }
+
+                // Assign initial Rubik's cube colors
+
+                if (z == 1)
+                    cube[index].colors[FRONT] = RED;
+
+                if (z == -1)
+                    cube[index].colors[BACK] = ORANGE;
+
+                if (x == -1)
+                    cube[index].colors[LEFT] = BLUE;
+
+                if (x == 1)
+                    cube[index].colors[RIGHT] = GREEN;
+
+                if (y == 1)
+                    cube[index].colors[UP] = YELLOW;
+
+                if (y == -1)
+                    cube[index].colors[DOWN] = WHITE;
+
                 index++;
             }
         }
@@ -384,7 +672,7 @@ int main(int argc, char **argv)
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize(1000, 1000);
-    glutCreateWindow("OpenGL Quad Drawing"); // Updated title
+    glutCreateWindow("Rubik's Cube");
 
     init();
     initCube();
