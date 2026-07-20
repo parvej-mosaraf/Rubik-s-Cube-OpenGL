@@ -402,18 +402,18 @@ void rotateStickerColors(Cubie &cubie, Face face, Direction direction)
         if (direction == CLOCKWISE)
         {
             temp = cubie.colors[FRONT];
-            cubie.colors[FRONT] = cubie.colors[RIGHT];
-            cubie.colors[RIGHT] = cubie.colors[BACK];
-            cubie.colors[BACK] = cubie.colors[LEFT];
-            cubie.colors[LEFT] = temp;
-        }
-        else
-        {
-            temp = cubie.colors[FRONT];
             cubie.colors[FRONT] = cubie.colors[LEFT];
             cubie.colors[LEFT] = cubie.colors[BACK];
             cubie.colors[BACK] = cubie.colors[RIGHT];
             cubie.colors[RIGHT] = temp;
+        }
+        else
+        {
+            temp = cubie.colors[FRONT];
+            cubie.colors[FRONT] = cubie.colors[RIGHT];
+            cubie.colors[RIGHT] = cubie.colors[BACK];
+            cubie.colors[BACK] = cubie.colors[LEFT];
+            cubie.colors[LEFT] = temp;
         }
         break;
     }
@@ -500,13 +500,13 @@ void rotateLayer(Face face, Direction direction)
         case DOWN:
             if (direction == CLOCKWISE)
             {
-                cube[i].zIndex = oldX;
-                cube[i].xIndex = -oldZ;
+                cube[i].zIndex = -oldX;
+                cube[i].xIndex = oldZ;
             }
             else
             {
-                cube[i].zIndex = -oldX;
-                cube[i].xIndex = oldZ;
+                cube[i].zIndex = oldX;
+                cube[i].xIndex = -oldZ;
             }
             break;
         }
@@ -550,45 +550,45 @@ void keyboard(unsigned char key, int x, int y)
 {
     switch (key)
     {
-    case 'f':
+    case 'F':
         startRotation(FRONT, true);
         break;
-    case 'F':
+    case 'f':
         startRotation(FRONT, false);
         break;
 
-    case 'b':
+    case 'B':
         startRotation(BACK, true);
         break;
-    case 'B':
+    case 'b':
         startRotation(BACK, false);
         break;
 
-    case 'u':
+    case 'U':
         startRotation(UP, true);
         break;
-    case 'U':
+    case 'u':
         startRotation(UP, false);
         break;
 
-    case 'd':
+    case 'D':
         startRotation(DOWN, true);
         break;
-    case 'D':
+    case 'd':
         startRotation(DOWN, false);
         break;
 
-    case 'l':
+    case 'L':
         startRotation(LEFT, true);
         break;
-    case 'L':
+    case 'l':
         startRotation(LEFT, false);
         break;
 
-    case 'r':
+    case 'R':
         startRotation(RIGHT, true);
         break;
-    case 'R':
+    case 'r':
         startRotation(RIGHT, false);
         break;
     }
