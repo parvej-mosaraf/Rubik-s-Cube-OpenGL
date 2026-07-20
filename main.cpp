@@ -238,12 +238,16 @@ void drawCubie(const Cubie &cubie)
         switch (currentRotation.face)
         {
         case FRONT:
-        case BACK:
             glRotatef(currentRotation.angle, 0, 0, 1);
             break;
-        case LEFT:
+        case BACK:
+            glRotatef(-currentRotation.angle, 0, 0, 1);
+            break;
         case RIGHT:
             glRotatef(currentRotation.angle, 1, 0, 0);
+            break;
+        case LEFT:
+            glRotatef(-currentRotation.angle, 1, 0, 0);
             break;
         case UP:
         case DOWN:
@@ -303,18 +307,18 @@ void rotateStickerColors(Cubie &cubie, Face face, Direction direction)
         if (direction == CLOCKWISE)
         {
             temp = cubie.colors[UP];
-            cubie.colors[UP] = cubie.colors[LEFT];
-            cubie.colors[LEFT] = cubie.colors[DOWN];
-            cubie.colors[DOWN] = cubie.colors[RIGHT];
-            cubie.colors[RIGHT] = temp;
-        }
-        else
-        {
-            temp = cubie.colors[UP];
             cubie.colors[UP] = cubie.colors[RIGHT];
             cubie.colors[RIGHT] = cubie.colors[DOWN];
             cubie.colors[DOWN] = cubie.colors[LEFT];
             cubie.colors[LEFT] = temp;
+        }
+        else
+        {
+            temp = cubie.colors[UP];
+            cubie.colors[UP] = cubie.colors[LEFT];
+            cubie.colors[LEFT] = cubie.colors[DOWN];
+            cubie.colors[DOWN] = cubie.colors[RIGHT];
+            cubie.colors[RIGHT] = temp;
         }
         break;
 
@@ -322,18 +326,18 @@ void rotateStickerColors(Cubie &cubie, Face face, Direction direction)
         if (direction == CLOCKWISE)
         {
             temp = cubie.colors[UP];
-            cubie.colors[UP] = cubie.colors[RIGHT];
-            cubie.colors[RIGHT] = cubie.colors[DOWN];
-            cubie.colors[DOWN] = cubie.colors[LEFT];
-            cubie.colors[LEFT] = temp;
-        }
-        else
-        {
-            temp = cubie.colors[UP];
             cubie.colors[UP] = cubie.colors[LEFT];
             cubie.colors[LEFT] = cubie.colors[DOWN];
             cubie.colors[DOWN] = cubie.colors[RIGHT];
             cubie.colors[RIGHT] = temp;
+        }
+        else
+        {
+            temp = cubie.colors[UP];
+            cubie.colors[UP] = cubie.colors[RIGHT];
+            cubie.colors[RIGHT] = cubie.colors[DOWN];
+            cubie.colors[DOWN] = cubie.colors[LEFT];
+            cubie.colors[LEFT] = temp;
         }
         break;
 
@@ -341,18 +345,18 @@ void rotateStickerColors(Cubie &cubie, Face face, Direction direction)
         if (direction == CLOCKWISE)
         {
             temp = cubie.colors[UP];
-            cubie.colors[UP] = cubie.colors[BACK];
-            cubie.colors[BACK] = cubie.colors[DOWN];
-            cubie.colors[DOWN] = cubie.colors[FRONT];
-            cubie.colors[FRONT] = temp;
-        }
-        else
-        {
-            temp = cubie.colors[UP];
             cubie.colors[UP] = cubie.colors[FRONT];
             cubie.colors[FRONT] = cubie.colors[DOWN];
             cubie.colors[DOWN] = cubie.colors[BACK];
             cubie.colors[BACK] = temp;
+        }
+        else
+        {
+            temp = cubie.colors[UP];
+            cubie.colors[UP] = cubie.colors[BACK];
+            cubie.colors[BACK] = cubie.colors[DOWN];
+            cubie.colors[DOWN] = cubie.colors[FRONT];
+            cubie.colors[FRONT] = temp;
         }
         break;
 
@@ -360,18 +364,18 @@ void rotateStickerColors(Cubie &cubie, Face face, Direction direction)
         if (direction == CLOCKWISE)
         {
             temp = cubie.colors[UP];
-            cubie.colors[UP] = cubie.colors[FRONT];
-            cubie.colors[FRONT] = cubie.colors[DOWN];
-            cubie.colors[DOWN] = cubie.colors[BACK];
-            cubie.colors[BACK] = temp;
-        }
-        else
-        {
-            temp = cubie.colors[UP];
             cubie.colors[UP] = cubie.colors[BACK];
             cubie.colors[BACK] = cubie.colors[DOWN];
             cubie.colors[DOWN] = cubie.colors[FRONT];
             cubie.colors[FRONT] = temp;
+        }
+        else
+        {
+            temp = cubie.colors[UP];
+            cubie.colors[UP] = cubie.colors[FRONT];
+            cubie.colors[FRONT] = cubie.colors[DOWN];
+            cubie.colors[DOWN] = cubie.colors[BACK];
+            cubie.colors[BACK] = temp;
         }
         break;
 
@@ -379,18 +383,18 @@ void rotateStickerColors(Cubie &cubie, Face face, Direction direction)
         if (direction == CLOCKWISE)
         {
             temp = cubie.colors[FRONT];
-            cubie.colors[FRONT] = cubie.colors[RIGHT];
-            cubie.colors[RIGHT] = cubie.colors[BACK];
-            cubie.colors[BACK] = cubie.colors[LEFT];
-            cubie.colors[LEFT] = temp;
-        }
-        else
-        {
-            temp = cubie.colors[FRONT];
             cubie.colors[FRONT] = cubie.colors[LEFT];
             cubie.colors[LEFT] = cubie.colors[BACK];
             cubie.colors[BACK] = cubie.colors[RIGHT];
             cubie.colors[RIGHT] = temp;
+        }
+        else
+        {
+            temp = cubie.colors[FRONT];
+            cubie.colors[FRONT] = cubie.colors[RIGHT];
+            cubie.colors[RIGHT] = cubie.colors[BACK];
+            cubie.colors[BACK] = cubie.colors[LEFT];
+            cubie.colors[LEFT] = temp;
         }
         break;
 
@@ -398,18 +402,18 @@ void rotateStickerColors(Cubie &cubie, Face face, Direction direction)
         if (direction == CLOCKWISE)
         {
             temp = cubie.colors[FRONT];
-            cubie.colors[FRONT] = cubie.colors[LEFT];
-            cubie.colors[LEFT] = cubie.colors[BACK];
-            cubie.colors[BACK] = cubie.colors[RIGHT];
-            cubie.colors[RIGHT] = temp;
-        }
-        else
-        {
-            temp = cubie.colors[FRONT];
             cubie.colors[FRONT] = cubie.colors[RIGHT];
             cubie.colors[RIGHT] = cubie.colors[BACK];
             cubie.colors[BACK] = cubie.colors[LEFT];
             cubie.colors[LEFT] = temp;
+        }
+        else
+        {
+            temp = cubie.colors[FRONT];
+            cubie.colors[FRONT] = cubie.colors[LEFT];
+            cubie.colors[LEFT] = cubie.colors[BACK];
+            cubie.colors[BACK] = cubie.colors[RIGHT];
+            cubie.colors[RIGHT] = temp;
         }
         break;
     }
