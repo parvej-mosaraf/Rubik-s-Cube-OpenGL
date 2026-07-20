@@ -2,6 +2,10 @@
 #include <GL/glu.h>
 #include <cstdio>
 
+int RotateXaxis = 0;
+int RotateYaxis = 0;
+int RotateZaxis = 0;
+
 enum Face
 {
     FRONT,
@@ -526,8 +530,9 @@ void display()
 
     glTranslatef(0.0f, 0.0f, -250.0f);
 
-    glRotatef(25, 1, 0, 0);
-    glRotatef(120, 0, 1, 0);
+    glRotatef(RotateXaxis, 1, 0, 0);
+    glRotatef(RotateYaxis, 0, 1, 0);
+    glRotatef(RotateZaxis, 0, 0, 1);
 
     drawRubiksCube();
 
@@ -591,6 +596,29 @@ void keyboard(unsigned char key, int x, int y)
     case 'r':
         startRotation(RIGHT, false);
         break;
+    case 'x':
+        RotateXaxis += 5;
+        // printf("RotateXaxis = %d\n", RotateXaxis);
+        break;
+    case 'X':
+        RotateXaxis -= 5;
+        // printf("RotateXaxis = %d\n", RotateXaxis);
+        break;
+    case 'y':
+        RotateYaxis += 5;
+        // printf("RotateYaxis = %d\n", RotateYaxis);
+        break;
+    case 'Y':
+        RotateYaxis -= 5;
+        // printf("RotateYaxis = %d\n", RotateYaxis);
+        break;
+    case 'Z':
+        RotateZaxis += 5;
+        // printf("RotateZaxis = %d\n", RotateZaxis);
+        break;
+    case 'z':
+        RotateZaxis -= 5;
+        // printf("RotateZaxis = %d\n", RotateZaxis);
     }
 }
 
@@ -654,16 +682,16 @@ void initCube()
                     cube[index].colors[BACK] = ORANGE;
 
                 if (x == -1)
-                    cube[index].colors[LEFT] = BLUE;
+                    cube[index].colors[LEFT] = GREEN;
 
                 if (x == 1)
-                    cube[index].colors[RIGHT] = GREEN;
+                    cube[index].colors[RIGHT] = BLUE;
 
                 if (y == 1)
-                    cube[index].colors[UP] = YELLOW;
+                    cube[index].colors[UP] = WHITE;
 
                 if (y == -1)
-                    cube[index].colors[DOWN] = WHITE;
+                    cube[index].colors[DOWN] = YELLOW;
 
                 index++;
             }
